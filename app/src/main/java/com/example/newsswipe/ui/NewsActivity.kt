@@ -109,7 +109,6 @@ class NewsActivity : AppCompatActivity(), CardStackListener {
                     val date = row.getString("pubDate")
                     //Log.d("API", "title = $title, author = $author, url = $url, image = $image, date = $date")
                     if (image == "null") image = getString(R.string.link_logo) // if no image, give app logo
-
                     listNews.add(News(title, author, url, date, image))
                 }
             }
