@@ -77,7 +77,6 @@ class NewsActivity : AppCompatActivity(), CardStackListener {
     private fun newsAPI(keywordsList: MutableList<String>): MutableList<News> {
         val listNews = mutableListOf<News>()
         if (keywordsList.isEmpty()){ // if the user has no keyword
-            Log.d("API", "pas de keyword")
             listNews.add(News(getString(R.string.no_keywords),"null","null","null","https://i.postimg.cc/8zJqXQqy/logo.png"))
         }
         else {
@@ -96,10 +95,8 @@ class NewsActivity : AppCompatActivity(), CardStackListener {
                 val myJSON = JSONObject(request.result.toString())
                 val listArticles = myJSON.getString("results")
                 val myJSONArticles = JSONArray(listArticles)
-
                 val nb: Int = if (myJSONArticles.length() > 5) 5 // set 5 news max per keyword
                 else myJSONArticles.length()
-
                 for (i in 0 until nb) {
                     val row = JSONObject(myJSONArticles.getJSONObject(i).toString())
                     val title = row.getString("title")
@@ -135,13 +132,6 @@ class NewsActivity : AppCompatActivity(), CardStackListener {
         //Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
-    override fun onCardSwiped(direction: Direction?) {
-        if (direction.toString() == "Right"){
-            databaseBookmarks.addBookmark(user,currentNews.title,currentNews.image,currentNews.url).toInt() // add bookmark
-            Toast.makeText(this, getString(R.string.bookmark_add_success), Toast.LENGTH_SHORT).show()
-        }
-    }
-
     override fun onCardRewound() {
         Log.d("CardStackView","card rewound")
     }
@@ -150,13 +140,16 @@ class NewsActivity : AppCompatActivity(), CardStackListener {
         Log.d("CardStackView","card canceled")
     }
 
+    override fun onCardSwiped(direction: Direction?) {
+        if (direction.toString() == "Right"){
+            databaseBookmarks.addBookmark(user,currentNews.title,currentNews.image,currentNews.url).toInt() // add bookmark
+            Toast.makeText(this, getString(R.string.bookmark_add_success), Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCardAppeared(view: View, position: Int) { // when a card appear
         setupShareButton(position)
         setCurrentNews(position)
-    }
-
-    private fun setCurrentNews(position: Int) { // function to update currentNews with the information of the displayed news
-        currentNews = articles[position]
     }
 
     override fun onCardDisappeared(view: View?, position: Int) { // when a card disappear
@@ -179,5 +172,9 @@ class NewsActivity : AppCompatActivity(), CardStackListener {
                 Toast.makeText(this,getString(R.string.nothing_to_share), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun setCurrentNews(position: Int) { // function to update currentNews with the information of the displayed news
+        currentNews = articles[position]
     }
 }

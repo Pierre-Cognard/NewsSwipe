@@ -55,6 +55,7 @@ class BookmarksActivity : AppCompatActivity() {
 
                 bookmarksList.removeAt(viewHolder.adapterPosition) // delete bookmark from list
                 mAdapter.notifyItemRemoved(viewHolder.adapterPosition) // notify adapter
+                if (bookmarksList.isEmpty())noBookmarks.visibility = View.VISIBLE // if no bookmarks, display text
             }
         }).attachToRecyclerView(recyclerView)
 
